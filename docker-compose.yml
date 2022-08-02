@@ -1,20 +1,22 @@
-version: "3.5"
 services:
-  xuexi-auto:
-    image: jolanse/study_xxqg:latest
-    # 容器名
-    container_name: xuexi-auto
-    environment:
-    # 时区
-      - TZ=Asia/Shanghai
-    build:
-      context: .
-      # 内存大小
-      shm_size: '2g'
-    # 配置文件路径
-    volumes:
-      - ./config:/opt/config
-    # 映射端口
-    ports:
-      - 8080:8080
-    restart: unless-stopped
+    study:
+        image: jolanse/study_xxqg:latest
+        container_name: study
+        # 自动重启
+        restart: always
+        network_mode: bridge
+        # 挂载目录
+        volumes:
+            - /opt/study/config:/opt/config
+            - /opt/study/dist:/opt/dist
+        # 打开的端口
+        ports:
+            # 打开8080端口，访问 http://ip:8080 进行控制 容器内默认是8080端口,可以直接修改前面的宿主机端口映射
+            - 8080:8080
+        # 设置共享内存2g（shared memory）,减少chrome崩溃
+        shm_size: 2gb
+        # 环境变量
+        environment:
+            # 将在每天0：25和18：25自动运行一次学习，防止忘记点UID开始学习
+            #- CRONTIME=27 5,13,21 * * *
+            - TZ=Asia/Shanghai
